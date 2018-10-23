@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 
 function resolve (dir) {
   return path.join(__dirname, dir)
@@ -6,6 +6,8 @@ function resolve (dir) {
 
 // vue.config.js
 module.exports = {
+  baseUrl: process.env.NODE_ENV === "production" ? "./" : "/",
+  outputDir: process.env.outputDir,
   pages: {
     index: {
       entry: 'src/main.js',

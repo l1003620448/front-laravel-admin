@@ -1,53 +1,71 @@
 import Vue from 'vue'
 import axios from 'axios'
-import store from '@/store'
-import { VueAxios } from './axios'
 import notification from 'ant-design-vue/es/notification'
 import { ACCESS_TOKEN } from "@/store/mutation-types"
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: '/api', // api base_url
-  timeout: 5000 // 请求超时时间
-})
+  baseURL: process.env.VUE_APP_API_BASE, // api base_url
+  timeout: 15000 // 请求超时时间
+});
 
-const err = (error) => {
-  if (error.response) {
-    if (error.status === 403) {
-      notification.error({ message: '拒绝访问', description: '无权限，拒绝访问' })
-    }
-    if (error.status === 401) {
-      notification.error({ message: '未授权', description: '授权验证失败' })
-      store.dispatch('Logout').then(() => {
-        location.reload()
-      })
-    }
-  }
-  return Promise.reject(error)
-};
 
 // request 拦截器
 service.interceptors.request.use(config => {
-  const token = Vue.ls.get(ACCESS_TOKEN)
+  const token = Vue.ls.get(ACCESS_TOKEN);
   if (token) {
-    config.headers[ 'Access-Token' ] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+    config.headers['Accept'] = "application/x.laravel-admin.v1+json";
+    config.headers[ 'Authorization' ] = "Bearer "+ token // 让每个请求携带自定义 token 请根据实际情况自行修改
   }
   return config
-}, err)
+}, error => {
+  // Do something with request error
+  Vue.$throw(error);
+  Promise.reject(error);
+});
 
-// response 拦截器
-service.interceptors.response.use((response) => {
-    return response.data
-  }, err)
 
-const installer = {
-  vm: {},
-  install (Vue, router = {}) {
-    Vue.use(VueAxios, router, service)
+
+// respone拦截器
+service.interceptors.response.use(
+  response => response.data,
+  err => {
+    Vue.$throw(err);
+    if (err.response) {
+      const status = err.response.status;
+      let msg = err.response.data.message;
+
+      if (!msg) {
+        switch (status) {
+          case 403:
+            msg = '无权操作';
+            break;
+          case 422:
+            msg = '表单验证错误';
+            break;
+          default:
+            msg = '数据错误';
+            break;
+        }
+      }
+
+      switch (status) {
+        case 401:
+          notification.error({ message: '未授权', description: '授权验证失败' });
+          // store.dispatch('Logout').then(() => {
+          //   location.reload()
+          // });
+          break;
+        default :
+          notification.error({ message: msg, description: msg });
+          break;
+      }
+
+    }else{
+      notification.error({ message: err.message, description: err.message });
+    }
+    return Promise.reject(err);
   }
-}
+);
 
-export {
-  installer as VueAxios,
-  service as axios
-}
+export default service
