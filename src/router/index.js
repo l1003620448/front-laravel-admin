@@ -86,13 +86,20 @@ export const asyncRouterMap = [
     component: LayoutBase,
     name: 'admin',
     redirect: '/admins/list',
-    meta: { title: '管理员管理', icon: 'user', permission: [ 'admins' ] },
+    meta: { title: 'Admin', icon: 'user', permission: [ 'admins' ] },
     children: [
       {
         path: '/admins/list',
         name: 'AdminList',
         component: () => import('@/views/admin/list'),
         meta: { title: '列表', permission: [ 'admins.index' ] }
+      },
+      {
+        path: '/admins/add',
+        name: 'AdminAdd',
+        hidden:true,
+        component: () => import('@/views/admin/add'),
+        meta: { title: '添加', permission: [ 'admins.store' ] }
       },
     ]
   },

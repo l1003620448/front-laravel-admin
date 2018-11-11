@@ -8,6 +8,14 @@ export function getInfo() {
   })
 }
 
+export function addAdmin(parameter) {
+  return request({
+    url: '/admins',
+    method: 'post',
+    data:parameter,
+  });
+}
+
 //获取
 export function getPermissions() {
   return request({

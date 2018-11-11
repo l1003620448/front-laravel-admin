@@ -20,7 +20,7 @@ service.interceptors.request.use(config => {
   return config
 }, error => {
   // Do something with request error
-  Vue.$throw(error);
+  // Vue.$throw(error);
   Promise.reject(error);
 });
 
@@ -30,7 +30,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => response.data,
   err => {
-    Vue.$throw(err);
+    // Vue.$throw(err);
     if (err.response) {
       const status = err.response.status;
       let msg = err.response.data.message;

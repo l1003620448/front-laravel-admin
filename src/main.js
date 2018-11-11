@@ -10,7 +10,7 @@ import Viser from 'viser-vue'
 import 'ant-design-vue/dist/antd.less';  // or 'ant-design-vue/dist/antd.less'
 
 import '@/permission' // permission control
-import '@/error'; // 错误捕获上报
+// import '@/error'; // 错误捕获上报
 import '@/utils/filter' // base filter
 
 import { ACCESS_TOKEN, DEFAULT_COLOR, DEFAULT_THEME, SIDEBAR_TYPE } from "@/store/mutation-types"
