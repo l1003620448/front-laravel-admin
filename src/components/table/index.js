@@ -105,14 +105,14 @@ export default {
       if (result instanceof Promise) {
         result.then(r => {
           this.localPagination = Object.assign({}, this.localPagination, {
-            current: r.pageNo,  // 返回结果中的当前分页数
-            total: r.totalCount, // 返回结果中的总记录数
+            current: r.meta.pagination.current_page,  // 返回结果中的当前分页数
+            total: r.meta.pagination.total, // 返回结果中的总记录数
             showSizeChanger: this.showSizeChanger,
             pageSize: (pagination && pagination.pageSize) ||
               this.localPagination.pageSize
           });
 
-          !r.totalCount && ['auto', false].includes(this.showPagination) && (this.localPagination = false)
+          !r.meta.pagination.total && ['auto', false].includes(this.showPagination) && (this.localPagination = false);
           this.localDataSource = r.data; // 返回结果中的数组数据
           this.localLoading = false
         });

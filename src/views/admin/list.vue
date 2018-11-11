@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered="false">
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="">新建</a-button>
+      <a-button type="primary" icon="plus" @click="Add">新建</a-button>
     </div>
     <s-table
       size="default"
@@ -11,6 +11,9 @@
         slot-scope="record"
         style="margin: 0">
       </div>
+      <span slot="status" slot-scope="text">
+        {{ text | statusFilter }}
+      </span>
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
@@ -37,7 +40,6 @@
       title="操作"
       style="top: 20px;"
       :width="800"
-      @ok="handleOk"
     >
 
     </a-modal>
@@ -104,7 +106,8 @@
             },
             {
               title: '状态',
-              dataIndex: 'status'
+              dataIndex: 'status',
+              scopedSlots: { customRender: 'status' },
             },
             {
               title: '创建时间',
@@ -136,9 +139,18 @@
           selectedRows: []
         }
       },
+      filters: {
+        statusFilter(status) {
+          const statusMap = {
+            1: '正常',
+            2: '禁用'
+          };
+          return statusMap[status]
+        }
+      },
       methods: {
-        handleOk () {
-
+        Add () {
+          this.$router.push({name: 'AdminAdd'})
         },
         onChange (selectedRowKeys, selectedRows) {
           this.selectedRowKeys = selectedRowKeys;

@@ -131,12 +131,14 @@
 
               let data = {};
               data = this.data;
+              let _this = this;
               addAdmin(data).then(response=>{
                 this.$notification.success({
                   message: '提示',
                   description: '新增管理员成功',
+                  duration:2,
                   onClose:function () {
-                    this.$router.push({name: 'AdminList'})
+                    _this.$router.push({name: 'AdminList'})
                   }
                 });
               });
