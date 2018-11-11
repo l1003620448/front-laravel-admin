@@ -64,14 +64,14 @@ export const asyncRouterMap = [
         path: '/dashboard/analysis',
         name: 'Analysis',
         component: () => import('@/views/dashboard/Analysis'),
-        meta: { title: '分析页', hideHeader: true, permission: [ 'dashboard' ] }
+        meta: { title: '分析页', hideHeader: false, permission: [ 'dashboard' ] }
       },
       {
         path: '/dashboard/monitor',
         name: 'Monitor',
         hidden: true,
         component: () => import('@/views/dashboard/Monitor'),
-        meta: { title: '监控页', hideHeader: true, permission: [ 'dashboard' ] }
+        meta: { title: '监控页', hideHeader: false, permission: [ 'dashboard' ] }
       },
       {
         path: '/dashboard/workplace',
@@ -79,6 +79,21 @@ export const asyncRouterMap = [
         component: () => import('@/views/dashboard/Workplace'),
         meta: { title: '工作台', permission: [ 'dashboard' ] }
       }
+    ]
+  },
+  {
+    path:'/admin',
+    component: LayoutBase,
+    name: 'admin',
+    redirect: '/admins/list',
+    meta: { title: '管理员管理', icon: 'user', permission: [ 'admins' ] },
+    children: [
+      {
+        path: '/admins/list',
+        name: 'AdminList',
+        component: () => import('@/views/admin/list'),
+        meta: { title: '列表', permission: [ 'admins.index' ] }
+      },
     ]
   },
   {

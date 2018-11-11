@@ -1,40 +1,27 @@
-import { axios } from '@/utils/request'
+import request from '@/utils/request';
 
-/**
- * login func
- * parameter: {
- *     username: '',
- *     password: '',
- *     remember_me: true,
- *     captcha: '12345'
- * }
- * @param parameter
- * @returns {*}
- */
+//登录.
 export function login(parameter) {
-  return axios({
-    url: '/auth/login',
+  return request({
+    url: '/admin/login',
     method: 'post',
-    data: parameter
-  })
+    data:parameter,
+  });
 }
 
-export function getInfo() {
-  return axios({
-    url: '/user/info',
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
-  })
-}
-
+//退出登录.
 export function logout() {
-  return axios({
-    url: '/auth/logout',
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+  return request({
+    url:"/admin/logout",
+    method:"delete",
+  })
+}
+
+//刷新 token.
+export function refresh_token(refresh_token) {
+  return request({
+    url: "/admin/token/refresh",
+    method: "post",
+    data:refresh_token
   })
 }
