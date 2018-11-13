@@ -15,7 +15,7 @@
         {{ text | statusFilter }}
       </span>
       <span slot="is_hidden" slot-scope="text">
-        {{ text | statusFilter }}
+        {{ text | isHiddenFilter }}
       </span>
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
@@ -146,6 +146,13 @@
           2: '禁用'
         };
         return statusMap[status]
+      },
+      isHiddenFilter(value){
+        const statusMap = {
+          0: '显示',
+          1: '隐藏'
+        };
+        return statusMap[value]
       }
     },
     methods: {
