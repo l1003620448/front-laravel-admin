@@ -14,6 +14,9 @@
       <span slot="status" slot-scope="text">
         {{ text | statusFilter }}
       </span>
+      <span slot="is_hidden" slot-scope="text">
+        {{ text | statusFilter }}
+      </span>
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
@@ -49,7 +52,7 @@
 
 <script>
   import STable from '@/components/table/'
-  import {getRoleList} from '@/api/role'
+  import {getPermissions} from '@/api/permission'
 
   export default {
     name: "list",
@@ -77,7 +80,7 @@
         // 表头
         columns: [
           {
-            title: 'Id',
+            title: 'ID',
             dataIndex: 'id'
           },
           {
@@ -85,8 +88,21 @@
             dataIndex: 'name',
           },
           {
-            title: '描述',
-            dataIndex: 'remark',
+            title: '路由',
+            dataIndex: 'route',
+          },
+          {
+            title: '上级ID',
+            dataIndex: 'parent_id',
+          },
+          {
+            title: '是否隐藏',
+            dataIndex: 'is_hidden',
+            scopedSlots: { customRender: 'is_hidden' },
+          },
+          {
+            title: '排序',
+            dataIndex: 'sort',
           },
           {
             title: '状态',
@@ -114,7 +130,7 @@
         loadData: parameter => {
           let parmas;
           parmas = Object.assign(parameter, this.queryParam);
-          return getRoleList(parmas).then(response=>{
+          return getPermissions(parmas).then(response=>{
             return response;
           });
         },

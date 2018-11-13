@@ -85,17 +85,17 @@ export const asyncRouterMap = [
     path:'/admin',
     component: LayoutBase,
     name: 'admin',
-    redirect: '/admins/list',
+    redirect: '/admin/list',
     meta: { title: 'Admin', icon: 'user', permission: [ 'admins' ] },
     children: [
       {
-        path: '/admins/list',
+        path: '/admin/list',
         name: 'AdminList',
         component: () => import('@/views/admin/list'),
         meta: { title: '列表', permission: [ 'admins.index' ] }
       },
       {
-        path: '/admins/add',
+        path: '/admin/add',
         name: 'AdminAdd',
         hidden:true,
         component: () => import('@/views/admin/add'),
@@ -106,21 +106,43 @@ export const asyncRouterMap = [
     path:'/role',
     component: LayoutBase,
     name: 'role',
-    redirect: '/roles/list',
-    meta: { title: '角色管理', icon: 'user', permission: [ 'roles.index' ] },
+    redirect: '/role/list',
+    meta: { title: '角色管理', icon: 'usergroup-add', permission: [ 'roles.index' ] },
     children: [
       {
-        path: '/roles/list',
+        path: '/role/list',
         name: 'RoleList',
         component: () => import('@/views/role/list'),
         meta: { title: '列表', permission: [ 'roles.index' ] }
       },
       {
-        path: '/roles/add',
+        path: '/role/add',
         name: 'RoleAdd',
         hidden:true,
         component: () => import('@/views/role/add'),
         meta: { title: '添加', permission: [ 'roles.store' ] }
+      },
+    ]
+  },
+  {
+    path:'/permission',
+    component: LayoutBase,
+    name: 'permission',
+    redirect: '/permission/list',
+    meta: { title: '权限管理', icon: 'lock', permission: [ 'permissions.index' ] },
+    children: [
+      {
+        path: '/permission/list',
+        name: 'PermissionList',
+        component: () => import('@/views/permission/list'),
+        meta: { title: '列表', permission: [ 'permissions.index' ] }
+      },
+      {
+        path: '/permission/add',
+        name: 'PermissionAdd',
+        hidden:true,
+        component: () => import('@/views/permission/add'),
+        meta: { title: '添加', permission: [ 'permissions.store' ] }
       },
     ]
   },
