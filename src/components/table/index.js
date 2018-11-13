@@ -83,12 +83,12 @@ export default {
       this.loadData();
     },
     loadData(pagination, filters, sorter) {
-      this.localLoading = true
+      this.localLoading = true;
       var result = this.data(
         Object.assign({
-            pageNo: (pagination && pagination.current) ||
+          page: (pagination && pagination.current) ||
               this.localPagination.current,
-            pageSize: (pagination && pagination.pageSize) ||
+          per_page: (pagination && pagination.pageSize) ||
               this.localPagination.pageSize
           },
           (sorter && sorter.field && {

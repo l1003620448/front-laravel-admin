@@ -24,9 +24,10 @@ export function getPermissions() {
   })
 }
 
-export function getAdminList() {
+export function getAdminList(parameter) {
   return request({
     url :"/admins",
     method:"get",
+    params:parameter,
   })
 }

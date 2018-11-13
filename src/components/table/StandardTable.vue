@@ -125,8 +125,8 @@
       this.paramsName = Object.assign(
         {},
         {
-          pageNumber: "pageNo",
-          pageSize: "pageSize",
+          pageNumber: "page",
+          pageSize: "per_page",
           total: "totalCount",
           results: "data",
           sortColumns: "sortColumns"

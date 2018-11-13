@@ -48,8 +48,8 @@
         label='状态'
         hasFeedback>
         <a-select v-model="data.status" defaultValue="1" style="width: 120px">
-          <a-select-option value="1">正常</a-select-option>
-          <a-select-option value="-1">禁用</a-select-option>
+          <a-select-option :key="1">正常</a-select-option>
+          <a-select-option :key="0">禁止</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item :wrapperCol="{ span: 24 }" style="text-align: center">

@@ -102,6 +102,27 @@ export const asyncRouterMap = [
         meta: { title: '添加', permission: [ 'admins.store' ] }
       },
     ]
+  },{
+    path:'/role',
+    component: LayoutBase,
+    name: 'role',
+    redirect: '/roles/list',
+    meta: { title: '角色管理', icon: 'user', permission: [ 'roles.index' ] },
+    children: [
+      {
+        path: '/roles/list',
+        name: 'RoleList',
+        component: () => import('@/views/role/list'),
+        meta: { title: '列表', permission: [ 'roles.index' ] }
+      },
+      {
+        path: '/roles/add',
+        name: 'RoleAdd',
+        hidden:true,
+        component: () => import('@/views/role/add'),
+        meta: { title: '添加', permission: [ 'roles.store' ] }
+      },
+    ]
   },
   {
     path: '/form',
