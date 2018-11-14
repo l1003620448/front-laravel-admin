@@ -191,7 +191,7 @@
         statusFilter(status) {
           const statusMap = {
             1: '正常',
-            2: '禁用'
+            0: '禁用'
           };
           return statusMap[status]
         }
@@ -212,7 +212,8 @@
           this.$router.push({name: 'AdminAdd'})
         },
         handleEdit (record) {
-          this.mdl = Object.assign({}, record);
+          // this.mdl = Object.assign({}, record);
+          this.mdl = record;
           this.visible = true
         },
         filterOption(input, option) {
@@ -226,7 +227,7 @@
             this.$notification.success({
               message: '提示',
               description: '更新成功',
-              duration:2,
+              duration:1,
               onClose:function () {
                 _this.visible = false;
               }
