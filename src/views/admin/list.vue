@@ -38,10 +38,52 @@
 
     <a-modal
       title="操作"
-      style="top: 20px;"
+      centered
       :width="800"
+      v-model="visible"
+      @ok="handleOk"
     >
-
+      <a-form :autoFormCreate="(form)=>{this.form = form}">
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label='名称'
+        >
+          <a-input placeholder='起一个名字' v-model="mdl.name" id='name' />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label='密码'>
+          <a-input type='password' placeholder='请输入密码' v-model="mdl.password" id='password' />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label='Emeil'>
+          <a-input placeholder='请输入email' v-model="mdl.email" id='email' />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label='所属角色'
+          hasFeedback>
+          <a-select v-model="mdl.role_id" style="width:300px"  allowClear showSearch :filterOption="filterOption">
+            <a-select-option :key="role.id" v-for="(role, index) in roles">{{role.name}}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-input type="hidden" placeholder='唯一识别码' v-model="mdl.id" disabled="disabled" />
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label='状态'
+        >
+          <a-select v-model="mdl.status">
+            <a-select-option :value='1'>正常</a-select-option>
+            <a-select-option :value='0'>禁用</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-form>
     </a-modal>
 
   </a-card>
@@ -49,7 +91,8 @@
 
 <script>
   import STable from '@/components/table/'
-  import {getAdminList} from '@/api/admin'
+  import {getAdminList,updateAdmin} from '@/api/admin'
+  import {getRoles} from '@/api/role';
 
     export default {
         name: "list",
@@ -59,6 +102,8 @@
 
       data () {
         return {
+          visible: false,
+
           labelCol: {
             xs: { span: 24 },
             sm: { span: 5 },
@@ -67,7 +112,10 @@
             xs: { span: 24 },
             sm: { span: 16 },
           },
+
           form: null,
+          roles:{},
+          mdl: {},
 
           // 高级搜索 展开/关闭
           advanced: false,
@@ -148,16 +196,42 @@
           return statusMap[status]
         }
       },
+      created(){
+        this.init();
+      },
       methods: {
+        init(){
+          this.getRoleList();
+        },
+        getRoleList(){
+          getRoles().then(response=>{
+            this.roles = response.data;
+          });
+        },
         Add () {
           this.$router.push({name: 'AdminAdd'})
         },
-        onChange (selectedRowKeys, selectedRows) {
-          this.selectedRowKeys = selectedRowKeys;
-          this.selectedRows = selectedRows
+        handleEdit (record) {
+          this.mdl = Object.assign({}, record);
+          this.visible = true
         },
-        toggleAdvanced () {
-          this.advanced = !this.advanced
+        filterOption(input, option) {
+          return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        },
+        handleOk () {
+          let _this = this;
+          let data = null;
+          data = this.mdl;
+          updateAdmin(this.mdl.id,data).then(response=>{
+            this.$notification.success({
+              message: '提示',
+              description: '更新成功',
+              duration:2,
+              onClose:function () {
+                _this.visible = false;
+              }
+            });
+          })
         },
       },
     }

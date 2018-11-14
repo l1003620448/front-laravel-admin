@@ -16,6 +16,14 @@ export function addAdmin(parameter) {
   });
 }
 
+export function updateAdmin(id,data) {
+  return request({
+    url: '/admins/'+id,
+    method: 'put',
+    data:data,
+  });
+}
+
 //获取
 export function getPermissions() {
   return request({

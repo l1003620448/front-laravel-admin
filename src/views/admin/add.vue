@@ -47,9 +47,9 @@
         :wrapperCol="wrapperCol"
         label='状态'
         hasFeedback>
-        <a-select v-model="data.status" defaultValue="1" style="width: 120px">
-          <a-select-option :key="1">正常</a-select-option>
-          <a-select-option :key="0">禁止</a-select-option>
+        <a-select v-model="data.status" style="width: 120px">
+          <a-select-option :value="1">正常</a-select-option>
+          <a-select-option :value="0">禁止</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item :wrapperCol="{ span: 24 }" style="text-align: center">
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-    import {getRoles,} from '@/api/role';
+    import {getRoles} from '@/api/role';
     import {addAdmin} from '@/api/admin';
 
     export default {
@@ -75,6 +75,8 @@
               name:"",
               password:"",
               password_confirmation:"",
+              email: null,
+              status:1,
               role_id:null,
             },
 
@@ -90,12 +92,6 @@
               sm: {span: 17}
             },
 
-            data:{
-              name:null,
-              status:null,
-              remark:null,
-              permission_ids:[],
-            },
           }
         },
         created(){
