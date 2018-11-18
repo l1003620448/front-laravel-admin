@@ -6,6 +6,7 @@
     <s-table
       size="default"
       :columns="columns"
+      ref="table"
       :data="loadData">
       <div
         slot-scope="record"
@@ -16,23 +17,6 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
-        <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;">详情</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">删除</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
       </span>
     </s-table>
 
@@ -60,19 +44,19 @@
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label='Emeil'>
+          label='邮箱'>
           <a-input placeholder='请输入email' v-model="mdl.email" id='email' />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          label='所属角色'
+          label='角色'
           hasFeedback>
-          <a-select v-model="mdl.role_id" style="width:300px"  allowClear showSearch :filterOption="filterOption">
+          <a-select v-model="mdl.role_id" allowClear showSearch :filterOption="filterOption">
             <a-select-option :key="role.id" v-for="(role, index) in roles">{{role.name}}</a-select-option>
           </a-select>
         </a-form-item>
-        <a-input type="hidden" placeholder='唯一识别码' v-model="mdl.id" disabled="disabled" />
+        <a-input type="hidden" v-model="mdl.id" disabled="disabled" />
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
@@ -212,7 +196,6 @@
           this.$router.push({name: 'AdminAdd'})
         },
         handleEdit (record) {
-          // this.mdl = Object.assign({}, record);
           this.mdl = record;
           this.visible = true
         },
@@ -229,8 +212,9 @@
               description: '更新成功',
               duration:1,
               onClose:function () {
+                _this.$refs.table.refresh();
                 _this.visible = false;
-              }
+              },
             });
           })
         },

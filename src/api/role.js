@@ -15,3 +15,11 @@ export function getRoles() {
     methods:"get",
   })
 }
+
+export function updateRole(id,data) {
+  return request({
+    url: '/roles/'+id,
+    method: 'put',
+    data:data,
+  });
+}

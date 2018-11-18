@@ -5,43 +5,42 @@
     </div>
     <s-table
       size="default"
+      ref="table"
       :columns="columns"
       :data="loadData">
       <div
         slot-scope="record"
         style="margin: 0">
       </div>
-      <span slot="status" slot-scope="text">
-        {{ text | statusFilter }}
-      </span>
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
-        <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;">详情</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">删除</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
       </span>
     </s-table>
 
     <a-modal
       title="操作"
-      style="top: 20px;"
+      centered
       :width="800"
+      v-model="visible"
+      @ok="handleOk"
     >
-
+      <a-form :autoFormCreate="(form)=>{this.form = form}">
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label='名称'
+        >
+          <a-input placeholder='起一个名字' v-model="mdl.name" id='name' />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label='描述'
+          hasFeedback
+        >
+          <a-textarea :rows="5" v-model="mdl.remark" placeholder="..." id='describe'/>
+        </a-form-item>
+      </a-form>
     </a-modal>
 
   </a-card>
@@ -49,7 +48,7 @@
 
 <script>
   import STable from '@/components/table/'
-  import {getRoleList} from '@/api/role'
+  import {getRoleList,updateRole} from '@/api/role'
 
   export default {
     name: "list",
@@ -59,6 +58,8 @@
 
     data () {
       return {
+        visible: false,
+
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -68,6 +69,7 @@
           sm: { span: 16 },
         },
         form: null,
+        mdl: {},
 
         // 高级搜索 展开/关闭
         advanced: false,
@@ -87,11 +89,6 @@
           {
             title: '描述',
             dataIndex: 'remark',
-          },
-          {
-            title: '状态',
-            dataIndex: 'status',
-            scopedSlots: { customRender: 'status' },
           },
           {
             title: '创建时间',
@@ -123,25 +120,29 @@
         selectedRows: []
       }
     },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          1: '正常',
-          2: '禁用'
-        };
-        return statusMap[status]
-      }
-    },
     methods: {
       Add () {
         this.$router.push({name: 'RoleAdd'})
       },
-      onChange (selectedRowKeys, selectedRows) {
-        this.selectedRowKeys = selectedRowKeys;
-        this.selectedRows = selectedRows
+      handleEdit (record) {
+        this.mdl = record;
+        this.visible = true
       },
-      toggleAdvanced () {
-        this.advanced = !this.advanced
+      handleOk () {
+        let _this = this;
+        let data = null;
+        data = this.mdl;
+        updateRole(this.mdl.id,data).then(response=>{
+          this.$notification.success({
+            message: '提示',
+            description: '更新成功',
+            duration:1,
+            onClose:function () {
+              _this.$refs.table.refresh();
+              _this.visible = false;
+            },
+          });
+        })
       },
     },
   }

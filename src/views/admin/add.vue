@@ -28,7 +28,7 @@
       <a-form-item
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
-        label='Emeil'
+        label='邮箱'
         fieldDecoratorId="data.email"
         :fieldDecoratorOptions="{rules: [{ required: true, message: 'email不能为空' },{type:'email',message:'邮箱格式不正确'}]}">
         <a-input placeholder='请输入email' v-model="data.email" id='email' />
@@ -36,9 +36,9 @@
       <a-form-item
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
-        label='所属角色'
+        label='角色'
         hasFeedback>
-        <a-select v-model="data.role_id" style="width:300px"  allowClear showSearch :filterOption="filterOption">
+        <a-select v-model="data.role_id" allowClear showSearch :filterOption="filterOption">
           <a-select-option :key="role.id" v-for="(role, index) in roles">{{role.name}}</a-select-option>
         </a-select>
       </a-form-item>
@@ -47,7 +47,7 @@
         :wrapperCol="wrapperCol"
         label='状态'
         hasFeedback>
-        <a-select v-model="data.status" style="width: 120px">
+        <a-select v-model="data.status" >
           <a-select-option :value="1">正常</a-select-option>
           <a-select-option :value="0">禁止</a-select-option>
         </a-select>
