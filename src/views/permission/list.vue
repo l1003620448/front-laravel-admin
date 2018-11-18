@@ -157,7 +157,7 @@
     },
     methods: {
       Add () {
-        this.$router.push({name: 'RoleAdd'})
+        this.$router.push({name: 'PermissionAdd'})
       },
       onChange (selectedRowKeys, selectedRows) {
         this.selectedRowKeys = selectedRowKeys;
