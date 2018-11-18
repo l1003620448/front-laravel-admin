@@ -23,3 +23,11 @@ export function updateRole(id,data) {
     data:data,
   });
 }
+
+export function addRole(data) {
+  return request({
+    url: '/roles',
+    method: 'post',
+    data:data,
+  });
+}

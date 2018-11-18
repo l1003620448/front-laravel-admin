@@ -119,10 +119,7 @@
             e.preventDefault();
             this.form.validateFields((err, values) => {
               if (err) {
-                this.$notification['error']({
-                  message: '填写有误噢,请仔细检查',
-                  description: values
-                })
+                return
               }
 
               let data = {};
