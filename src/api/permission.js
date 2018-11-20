@@ -14,3 +14,19 @@ export function getPermissions(parameter) {
     params:parameter,
   })
 }
+
+export function addPermission(data) {
+  return request({
+    url:"/permissions",
+    method: 'post',
+    data:data,
+  })
+}
+
+export function updatePermission(id,data) {
+  return request({
+    url: '/permissions/'+id,
+    method: 'put',
+    data:data,
+  });
+}

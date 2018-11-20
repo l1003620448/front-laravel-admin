@@ -26,47 +26,27 @@
         :wrapperCol="wrapperCol"
         label='顶级权限'
         hasFeedback>
-        <a-select v-model="data.parent_id" allowClear showSearch :filterOption="filterOption">
-          <a-select-option :key="permission.id" v-for="(permission, index) in permissions">{{permission.name}}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-divider />
-      <a-form-item
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-        label='顶级权限'
-        hasFeedback>
-        <a-tree
-          checkable
-          @expand="onExpand"
-          :expandedKeys="tree.expandedKeys"
-          v-model="tree.checkedKeys"
-          :autoExpandParent="tree.autoExpandParent"
-          :selectedKeys="tree.selectedKeys"
-          @select="onSelect"
-          :treeNodes="tree.Permissionlist" :checkStrictly="true" :multiple="true">
-        </a-tree>
+        <a-tree-select
+          style="width: 300px"
+          allowClear
+          dropdownMatchSelectWidth
+          :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+          :treeData="treeData"
+          placeholder='请选择'
+          :treeDefaultExpandAll="false"
+          v-model="data.parent_id"
+        >
+        </a-tree-select>
       </a-form-item>
       <a-form-item
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
         label='隐藏'
         hasFeedback>
-        <a-select v-model="data.is_hidden">
-          <a-select-option :value="0">否</a-select-option>
-          <a-select-option :value="1">是</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-        label='状态'
-        hasFeedback>
-        <a-select v-model="data.status">
-          <a-select-option :value="1">正常</a-select-option>
-          <a-select-option :value="0">禁止</a-select-option>
-        </a-select>
+        <a-radio-group v-model="data.is_hidden">
+          <a-radio :value="0">否</a-radio>
+          <a-radio :value="1">是</a-radio>
+        </a-radio-group>
       </a-form-item>
       <a-form-item
         :labelCol="labelCol"
@@ -82,14 +62,13 @@
 </template>
 
 <script>
-  import {getPermissionList} from "@/api/permission"
+  import {getPermissionList,addPermission} from "@/api/permission"
 
   export default {
     name: "add",
     data() {
       return {
         form: null,
-        permissions: {},
 
         data: {
           name: "",
@@ -98,16 +77,9 @@
           parent_id: null,
           is_hidden: 0,
           sort:255,
-          status: 1,
         },
 
-        tree:{
-          Permissionlist:[],
-          expandedKeys: [],
-          checkedKeys: [],
-          selectedKeys:[],
-          autoExpandParent: true,
-        },
+        treeData: [],
 
         labelCol: {
           lg: {span: 7},
@@ -126,10 +98,9 @@
     },
     methods: {
       init() {
-        this.tree.checkedKeys = [];
         getPermissionList().then(response=>{
           //Todo 递归找上下级关系.
-          this.$set(this.tree,'Permissionlist',this.getTrees(response.data,0));
+          this.treeData = this.getTrees(response.data,0);
         });
       },
 
@@ -166,32 +137,39 @@
         for (let t of items[parentId]) {
           t.children = this.formatTree(items, t.id);
           if(t.children.length >0){
-            result.push({title: t.name, key: t.route,children:t.children});
+            result.push({label: t.name, key: t.route, value: t.id.toString(),children:t.children});
           }else{
-            result.push({title: t.name, key: t.route});
+            result.push({label: t.name, key: t.route, value: t.id.toString()});
           }
         }
         return result;
       },
-
-      onExpand (expandedKeys) {
-        this.tree.expandedKeys = expandedKeys;
-        this.tree.autoExpandParent = false
-      },
-      onCheck (checkedKeys) {
-        console.log('onCheck', checkedKeys);
-        this.tree.checkedKeys = checkedKeys
-      },
-      onSelect (selectedKeys, info) {
-        console.log('onSelect', info)
-        this.tree.selectedKeys = selectedKeys
-      },
-
       filterOption(input, option) {
         return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
       },
       handleSubmit(e) {
         e.preventDefault();
+
+        this.form.validateFields((err, values) => {
+          if (err) {
+            return
+          }
+
+          let data = {};
+          data = this.data;
+          let _this = this;
+          addPermission(data).then(response=>{
+            this.$notification.success({
+              message: '提示',
+              description: '新增权限成功',
+              duration:2,
+              onClose:function () {
+                _this.$router.push({name: 'PermissionList'})
+              }
+            });
+          });
+        })
+
       },
     }
   }
